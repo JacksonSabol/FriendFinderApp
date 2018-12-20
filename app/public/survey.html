@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friend Finder App | Survey</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <style type="text/css">
+        .header {
+            background-color: rgb(219, 121, 198);
+            line-height: 1;
+            display: block;
+            height: 200px;
+            width: 100%;
+            padding-top: 60px;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            border-radius: .3rem;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgb(219, 121, 198);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 68px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        .button-color {
+            background-image: none;
+            background-color: rgb(114, 243, 74);
+        }
+
+        .button-color:hover {
+            background-image: none;
+            background-color: rgb(67, 196, 28);
+        }
+
+        .panel-primary {
+            background-image: none;
+            border-color: rgb(219, 121, 198);
+        }
+
+        .panel {
+            margin-bottom: 21px;
+            background-image: none;
+            background-color: #ffffff;
+
+        }
+
+        .panel-body {
+            padding: 15px;
+            margin-top: 0;
+            background-image: none;
+            border-color: rgb(219, 121, 198);
+        }
+
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 17px;
+            color: inherit;
+        }
+
+        .panel-primary>.panel-heading {
+            color: #ffffff;
+            border-bottom: 0;
+            background-image: none;
+            background-color: rgb(219, 121, 198);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modal to display when a survey is successfully submitted -->
+    <div class="modal fade" id="addToProfModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Success!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Your survey results have been sucessfully submitted!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="header">
+                    <h1><i class="far fa-handshake"></i> <strong> Friend Finder App - Survey <i class="fa fa-list-alt"></i></strong></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <br>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i> Description:</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            <li>
+                                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit deserunt rerum
+                                    nihil ipsa minus officia nobis nesciunt recusandae fugiat, dolore neque magnam
+                                    dolores corrupti unde quae mollitia natus excepturi ipsam?</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <br>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><strong><i class="fa fa-table"></i> Survey:</strong></h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="friend-name">Full Name:</label>
+                                <input type="text" class="form-control" id="friend-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="friend-photo">Photo URL:</label>
+                                <input type="text" class="form-control" id="friend-photo">
+                            </div>
+                            <div class="text-center">
+                                <button id="submit-survey" class="btn btn-lg btn-info button-color"><i class="fa fa-list-alt"></i>
+                                    Submit Survey</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        // Set event listener for the click of anything with the class of submit (our submit survey button)
+        $("#submit-survey").on("click", function (event) {
+            // Prevent default of refreshing the page
+            event.preventDefault();
+
+            // Assign a variable to hold an object of the form elements
+            var newFriend = {
+                name: $("#friend-name").val().trim(),
+                photo: $("#friend-photo").val().trim(),
+                scores: [1, 2, 3, 4, 5, 4, 3, 2, 1, 2]
+            };
+            // Log for testing
+            console.log(newFriend);
+
+            // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
+            $.post("/api/friends", newFriend)
+                .then(function (data) {
+                    // Our event listening for a post request returns a boolean value of true when the new data has been successfully added to friends.js
+                    // If a truthy response of data is returned, alert the user of a successful submission by showing a modal
+                    if (data) {
+                        // Show the successful submission modal
+                        $('#addNewFriend').modal('show');
+                        // Set timeout to only show modal for 1.5 seconds
+                        setTimeout(addNewFriendDone, 1000 * 1.5);
+                    }
+
+                    // Clear the form after submission is successful
+                    $("#friend-name").val("");
+                    $("#friend-photo").val("");
+
+                });
+
+        });
+        // Function to hide addNewFriend modal
+        function addNewFriendDone() {
+            $('#addNewFriend').modal('hide');
+        }
+    </script>
+</body>
+
+</html>

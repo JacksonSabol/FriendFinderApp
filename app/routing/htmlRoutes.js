@@ -7,7 +7,7 @@ module.exports = function (app) {
     app.get("/survey", function (req, res) {
         // When a GET request is made to the specified path, send the survey.html file located in the 'app' > 'public' directory 
         // (one directory up from current directory, then down into 'public')
-        res.sendFile(path.join(__dirname + '../public/survey.html'));
+        res.sendFile(path.join(__dirname, '../public/survey.html'));
     });
     // Create an instance of Express to listen for a GET request made to every path besides '/survey'
     // The '*' functions as a default, catch-all route for unspecified paths
