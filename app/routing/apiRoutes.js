@@ -15,8 +15,6 @@ module.exports = function (app) {
         // Begin compatibility logic
         // Assign a variable to hold the req.body (new friend object) - req.body is available since we're using the body parsing middleware
         var newFriend = req.body;
-        // Log for testing
-        console.log(newFriend);
         // Assign an empty variable to receive an object of the best match for a friend after compatibility is calculated
         var friendMatch;
         // Instantiate a variable with the maximum possible difference allowed by 10 survey questions + 1 (50 + 1)
@@ -40,11 +38,14 @@ module.exports = function (app) {
                 friendMatch = friend;
             }
         });
+        // Log newFriend for testing
+        console.log(newFriend);
         // Log friendMatch for testing
-        console.log(friendData);
+        console.log(friendMatch);
         // Push newFriend object to array of objects in api/friends.js
         friendData.push(newFriend);
         // Send the boolean value of 'true' back as a JSON response to 'alert' user of a survey successfully submitted with a modal
+        // Return 'friendMatch' when everything else is set up and working
         res.json(true);
     });
 };

@@ -15,6 +15,9 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
     <style type="text/css">
         .header {
             background-color: rgb(219, 121, 198);
@@ -169,11 +172,13 @@
                 scores: [1, 2, 3, 4, 5, 4, 3, 2, 1, 2]
             };
             // Log for testing
-            console.log(newFriend);
+            console.log("befores post: ", newFriend);
 
             // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
-            $.post("/api/friends", newFriend)
-                .then(function (data) {
+            $.post("/api/friends", newFriend,
+                function (data) {
+                    console.log("$$$$$$$$");
+                    console.log(data);
                     // Our event listening for a post request returns a boolean value of true when the new data has been successfully added to friends.js
                     // If a truthy response of data is returned, alert the user of a successful submission by showing a modal
                     if (data) {
@@ -186,8 +191,8 @@
                     // Clear the form after submission is successful
                     $("#friend-name").val("");
                     $("#friend-photo").val("");
-
-                });
+                }
+            );
 
         });
         // Function to hide addNewFriend modal
