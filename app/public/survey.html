@@ -87,12 +87,18 @@
             background-image: none;
             background-color: rgb(219, 121, 198);
         }
+
+        .modal-header {
+            background-image: none;
+            background-color: rgb(219, 121, 198);
+            font-family: 'Lato', sans-serif;
+        }
     </style>
 </head>
 
 <body>
     <!-- Modal to display when a survey is successfully submitted -->
-    <div class="modal fade" id="addToProfModal" role="dialog">
+    <div class="modal fade" id="addNewFriend" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -160,25 +166,23 @@
         </div>
     </div>
     <script type="text/javascript">
+        // Function to hide addNewFriend modal
+        function addNewFriendDone() {
+            $('#addNewFriend').modal('hide');
+        }
         // Set event listener for the click of anything with the class of submit (our submit survey button)
         $("#submit-survey").on("click", function (event) {
             // Prevent default of refreshing the page
             event.preventDefault();
-
             // Assign a variable to hold an object of the form elements
             var newFriend = {
                 name: $("#friend-name").val().trim(),
                 photo: $("#friend-photo").val().trim(),
                 scores: [1, 2, 3, 4, 5, 4, 3, 2, 1, 2]
             };
-            // Log for testing
-            console.log("befores post: ", newFriend);
-
             // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
             $.post("/api/friends", newFriend,
                 function (data) {
-                    console.log("$$$$$$$$");
-                    console.log(data);
                     // Our event listening for a post request returns a boolean value of true when the new data has been successfully added to friends.js
                     // If a truthy response of data is returned, alert the user of a successful submission by showing a modal
                     if (data) {
@@ -195,10 +199,6 @@
             );
 
         });
-        // Function to hide addNewFriend modal
-        function addNewFriendDone() {
-            $('#addNewFriend').modal('hide');
-        }
     </script>
 </body>
 
