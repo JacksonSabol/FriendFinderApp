@@ -40,7 +40,7 @@ module.exports = function (app) {
         });
         // Push newFriend object to array of objects in api/friends.js
         friendData.push(newFriend);
-        // Send the friendMatch object back as a JSON response to 'alert' user of a survey successfully submitted then display their match with a modal
+        // Send the friendMatch object back as a JSON response to 'alert' user of a survey successfully submitted, then display their match with a modal containing values from this response
         res.json(friendMatch);
     });
 };

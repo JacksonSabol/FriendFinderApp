@@ -1,5 +1,4 @@
 // Assign a variable to hold the array of friend objects
-// Survey scores are randomly assigned until the app is up and running, then my "friends" can fill them out themselves
 var friendsArray = [
 	{
 		name: "Christie Byrne",

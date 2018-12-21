@@ -268,7 +268,7 @@
                 $("#survey-questions").append(newP);
             }
         }
-        // Function to hide addNewFriend modal and add text and photo to friend-match modal
+        // Function to hide addNewFriend modal
         function addNewFriendDone() {
             $('#addNewFriend').modal('hide');
         }
@@ -284,7 +284,7 @@
         function blankRadiosDone() {
             $('#blankRadios').modal('hide');
         }
-        // Set event listener for the click of anything with the class of submit (our submit survey button)
+        // Set event listener for the click of anything with the id of submit-survey (our submit survey button)
         $("#submit-survey").on("click", function (event) {
             // Prevent default of refreshing the page
             event.preventDefault();
@@ -311,11 +311,11 @@
                 var isChecked = false;
                 // Iterate through each radio button for each question
                 for (var answer = 0; answer < eachQuestion.length; answer++) {
-                    // If all radio buttons for each question have been 'checked'
+                    // If at least one radio button for each question has been 'checked'
                     if (eachQuestion[answer].checked) {
                         // Reassign tracker variable to true so we know that user answered all questions
                         isChecked = true;
-                        // Push all of the indices to the answersArray + 1 to account for the index of any array starting at 0
+                        // Push all of the indices at which the checked radios occurred to the answersArray; + 1 to account for the index of any array starting at 0
                         answersArray.push(answer + 1);
                     }
                 }
@@ -338,19 +338,19 @@
             // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
             $.post("/api/friends", newFriend,
                 function (data) {
-                    // Our event listening for a post request returns a friendMatch object (truthy) when the new data has been successfully added to friends.js
+                    // Our event listener for a POST request returns a friendMatch JSON object (truthy) when the new data has been successfully added to friends.js
                     // If a truthy response of data is returned, alert the user of a successful submission by showing a modal
                     if (data) {
                         // Show the successful submission modal
                         $('#addNewFriend').modal('show');
                         // Set timeout to only show modal for 4 seconds
                         setTimeout(addNewFriendDone, 1000 * 4);
-                        // Add name of friend match to Name: span
+                        // Add name of friend match to friend-match modal Name: <span>
                         $('#friend-match-name').text(data.name);
-                        // Add photo of frienc match to Photo: div
+                        // Add photo of friend match to friend-match modal Photo: <div>
                         $('#friend-match-photo').html('<img class="friend-match-img" src="' + data.photo + '">');
                         // setTimeout to invoke function to show friend-match modal right after addNewFriend modal closes
-                        setTimeout(showFriendMatch, 1000 * 4.5);
+                        setTimeout(showFriendMatch, 1000 * 4.2);
                     }
                     // Clear the form after submission is successful
                     $("#friend-name").val("");
