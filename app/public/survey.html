@@ -116,6 +116,20 @@
             </div>
         </div>
     </div>
+    <!-- Modal to display when there are unanswered questions upon submission -->
+    <div class="modal fade" id="blankRadios" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Submission Failed</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Please fill out questions and resubmit</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
     <!-- Modal to display when a survey is successfully submitted -->
     <div class="modal fade" id="addNewFriend" role="dialog">
         <div class="modal-dialog">
@@ -235,6 +249,9 @@
         // Function to hide blankInputs modal
         function blankInputsDone() {
             $('#blankInputs').modal('hide');
+        }// Function to hide blankInputs modal
+        function blankRadiosDone() {
+            $('#blankRadios').modal('hide');
         }
         // Set event listener for the click of anything with the class of submit (our submit survey button)
         $("#submit-survey").on("click", function (event) {
@@ -244,6 +261,8 @@
             var inputName = $("#friend-name").val().trim();
             // Assign variable to hold the input from the friend-photo field
             var inputPhoto = $("#friend-photo").val().trim();
+            // Instantiate a blank array to receive the indices of each 'checked' radio button for each question
+            var answersArray = [];
             // Check to see if the 'name' and the 'photo' input fields are filled out
             if ((inputName === "") || (inputPhoto === "")) {
                 // If they're not, 'alert' user to fill them out by displaying a modal
@@ -253,11 +272,39 @@
                 // Do not continue until user fills out both input fields
                 return;
             }
+            // If the name and photo input fields are not empty, iterate through the questionsArray and the answers provided by the user
+            for (var i = 0; i < questionsArray.length; i++) {
+                // Assign a variable to hold the question number for each question asked
+                var eachQuestion = document.getElementsByName("question-" + i);
+                // Assign a tracker variable for whether a radio button has been checked for each question
+                var isChecked = false;
+                // Iterate through each radio button for each question
+                for (var answer = 0; answer < eachQuestion.length; answer++) {
+                    // If all radio buttons for each question have been 'checked'
+                    if (eachQuestion[answer].checked) {
+                        // Reassign tracker variable to true so we know that user answered all questions
+                        isChecked = true;
+                        // Push all of the indices to the answersArray + 1 to account for the index of any array starting at 0
+                        answersArray.push(answer + 1);
+                    }
+                }
+                // If isChecked is still false after iterating through the results, user missed a question, and isChecked is never reassigned to 'true'
+                if (!isChecked) {
+                    // Alert' user to fill out all questions by displaying a modal
+                    $('#blankRadios').modal('show');
+                    // Set timeout to only show modal for 3 seconds
+                    setTimeout(blankRadiosDone, 1000 * 3);
+                    // Do not continue until user fills out all questions
+                    return;
+                }
+            }
+            // Log answersArray for testing
+            console.log(answersArray);
             // Assign a variable to hold an object of the form elements
             var newFriend = {
                 name: $("#friend-name").val().trim(),
                 photo: $("#friend-photo").val().trim(),
-                scores: [1, 2, 3, 4, 5, 4, 3, 2, 1, 2]
+                scores: answersArray
             };
             // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
             $.post("/api/friends", newFriend,
