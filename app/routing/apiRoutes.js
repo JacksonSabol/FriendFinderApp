@@ -38,14 +38,9 @@ module.exports = function (app) {
                 friendMatch = friend;
             }
         });
-        // Log newFriend for testing
-        console.log(newFriend);
-        // Log friendMatch for testing
-        console.log(friendMatch);
         // Push newFriend object to array of objects in api/friends.js
         friendData.push(newFriend);
-        // Send the boolean value of 'true' back as a JSON response to 'alert' user of a survey successfully submitted with a modal
-        // Return 'friendMatch' when everything else is set up and working
-        res.json(true);
+        // Send the friendMatch object back as a JSON response to 'alert' user of a survey successfully submitted then display their match with a modal
+        res.json(friendMatch);
     });
 };

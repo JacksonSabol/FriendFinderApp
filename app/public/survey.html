@@ -45,6 +45,10 @@
             text-align: center;
             font-family: 'Lato', sans-serif;
         }
+        
+        a {
+            text-decoration: none;
+        }
 
         a:hover {
             text-decoration: none;
@@ -98,12 +102,34 @@
             background-color: rgb(219, 121, 198);
             font-family: 'Lato', sans-serif;
         }
+
+        .friend-match-img {
+            width: 250px;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Modal to display when name and photo input fields are blank upon submission -->
-    <div class="modal fade" id="blankInputs" role="dialog">
+    <!-- Modal to display friend match -->
+    <div class="modal fade" id="friend-match" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">You have a match!</h4>
+                </div>
+                <div class="modal-body">
+                    <h4><strong>Name: </strong><span id="friend-match-name"></span></h4>
+                    <h4><strong>Photo: </strong><br>
+                        <div id="friend-match-photo"></div>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal to display when there are unanswered questions upon submission -->
+    <div class="modal fade" id="blankRadios" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -111,25 +137,11 @@
                     <h4 class="modal-title">Submission Failed</h4>
                 </div>
                 <div class="modal-body">
-                    <h4>Please fill out your name and include a URL linking a photo of you</h4>
+                    <h4>Please fill out questions and resubmit</h4>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Modal to display when there are unanswered questions upon submission -->
-    <div class="modal fade" id="blankRadios" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Submission Failed</h4>
-                    </div>
-                    <div class="modal-body">
-                        <h4>Please fill out questions and resubmit</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
     <!-- Modal to display when a survey is successfully submitted -->
     <div class="modal fade" id="addNewFriend" role="dialog">
         <div class="modal-dialog">
@@ -146,11 +158,25 @@
             </div>
         </div>
     </div>
+    <!-- Modal to display when name and photo input fields are blank upon submission -->
+    <div class="modal fade" id="blankInputs" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Submission Failed</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Please fill out your name and include a URL linking a photo of you</h4>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
                 <div class="header">
-                    <h1><i class="far fa-handshake"></i> <strong> Friend Finder Survey <i class="far fa-handshake"></i></strong></h1>
+                    <a href="/"><h1><i class="far fa-handshake"></i> <strong> Friend Finder Survey <i class="far fa-handshake"></i></strong></h1></a>
                 </div>
             </div>
         </div>
@@ -242,14 +268,19 @@
                 $("#survey-questions").append(newP);
             }
         }
-        // Function to hide addNewFriend modal
+        // Function to hide addNewFriend modal and add text and photo to friend-match modal
         function addNewFriendDone() {
             $('#addNewFriend').modal('hide');
+        }
+        // Function to show friend-match modal
+        function showFriendMatch() {
+            $('#friend-match').modal('show');
         }
         // Function to hide blankInputs modal
         function blankInputsDone() {
             $('#blankInputs').modal('hide');
-        }// Function to hide blankInputs modal
+        }
+        // Function to hide blankInputs modal
         function blankRadiosDone() {
             $('#blankRadios').modal('hide');
         }
@@ -298,8 +329,6 @@
                     return;
                 }
             }
-            // Log answersArray for testing
-            console.log(answersArray);
             // Assign a variable to hold an object of the form elements
             var newFriend = {
                 name: $("#friend-name").val().trim(),
@@ -309,18 +338,33 @@
             // Using ajax, make a POST request to the path of /api/friends, which we are listening for in apiRoutes.js
             $.post("/api/friends", newFriend,
                 function (data) {
-                    // Our event listening for a post request returns a boolean value of true when the new data has been successfully added to friends.js
+                    // Our event listening for a post request returns a friendMatch object (truthy) when the new data has been successfully added to friends.js
                     // If a truthy response of data is returned, alert the user of a successful submission by showing a modal
                     if (data) {
                         // Show the successful submission modal
                         $('#addNewFriend').modal('show');
                         // Set timeout to only show modal for 4 seconds
                         setTimeout(addNewFriendDone, 1000 * 4);
+                        // Add name of friend match to Name: span
+                        $('#friend-match-name').text(data.name);
+                        // Add photo of frienc match to Photo: div
+                        $('#friend-match-photo').html('<img class="friend-match-img" src="' + data.photo + '">');
+                        // setTimeout to invoke function to show friend-match modal right after addNewFriend modal closes
+                        setTimeout(showFriendMatch, 1000 * 4.5);
                     }
-
                     // Clear the form after submission is successful
                     $("#friend-name").val("");
                     $("#friend-photo").val("");
+                    // Clear radio buttons
+                    for (var i = 0; i < questionsArray.length; i++) {
+                        // Assign variable to hold the question-# for each question
+                        var eachQuestion = document.getElementsByName("question-" + i);
+                        // Iterate through each radio button of each question by question-#
+                        for (var answer = 0; answer < eachQuestion.length; answer++) {
+                            // Reassign their 'checked' value to false
+                            eachQuestion[answer].checked = false;
+                        }
+                    }
                 }
             );
 
