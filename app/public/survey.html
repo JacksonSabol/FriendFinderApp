@@ -104,18 +104,18 @@
 <body>
     <!-- Modal to display when name and photo input fields are blank upon submission -->
     <div class="modal fade" id="blankInputs" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Submission Failed</h4>
-                    </div>
-                    <div class="modal-body">
-                        <h4>Please fill out your name and include a URL linking a photo of you</h4>
-                    </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Submission Failed</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Please fill out your name and include a URL linking a photo of you</h4>
                 </div>
             </div>
         </div>
+    </div>
     <!-- Modal to display when a survey is successfully submitted -->
     <div class="modal fade" id="addNewFriend" role="dialog">
         <div class="modal-dialog">
@@ -136,7 +136,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="header">
-                    <h1><i class="far fa-handshake"></i> <strong> Friend Finder App - Survey <i class="fa fa-list-alt"></i></strong></h1>
+                    <h1><i class="far fa-handshake"></i> <strong> Friend Finder Survey <i class="far fa-handshake"></i></strong></h1>
                 </div>
             </div>
         </div>
@@ -145,14 +145,19 @@
                 <br>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i> Description:</strong></h3>
+                        <h3 class="panel-title"><strong><i class="fa fa-list-alt"></i> Instructions:</strong></h3>
                     </div>
                     <div class="panel-body">
                         <ul>
                             <li>
-                                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Suscipit deserunt rerum
-                                    nihil ipsa minus officia nobis nesciunt recusandae fugiat, dolore neque magnam
-                                    dolores corrupti unde quae mollitia natus excepturi ipsam?</p>
+                                <p>Enter your Name, a URL link to a photo of yourself, and fill out all 10 questions by
+                                    clicking on one of the 1 - 5 buttons. 1 means you Strongly Disagree with the
+                                    statment, 5 means you Strongly Agree with the statment, and 2 - 4 are anywhere in
+                                    between.</p>
+                            </li>
+                            <li>
+                                <p>When you have completed all survey questions, click the Submit Survey button to see
+                                    who your closest friend match is from our database!</p>
                             </li>
                         </ul>
                     </div>
@@ -176,6 +181,9 @@
                                 <label for="friend-photo">Photo URL:</label>
                                 <input type="text" class="form-control" id="friend-photo">
                             </div>
+                            <div class="form-group">
+                                <div id="survey-questions"></div>
+                            </div>
                             <div class="text-center">
                                 <button id="submit-survey" class="btn btn-lg btn-info button-color"><i class="fa fa-list-alt"></i>
                                     Submit Survey</button>
@@ -187,6 +195,39 @@
         </div>
     </div>
     <script type="text/javascript">
+        // Define array of questions
+        var questionsArray = ["<strong>Question 1:</strong><br> I look up to my friends as role models", "<strong>Question 2:</strong><br> I prefer to be spontaneous and not plan out my daily activities", "<strong>Question 3:</strong><br> I prefer to have open and direct conversations about how I'm feeling", "<strong>Question 4:</strong><br> I like to have things more than I like to have experiences", "<strong>Question 5:</strong><br> I like to do most of the talking in a conversation", "<strong>Question 6:</strong><br> I focus more on the accomplishments of the group than on my own contributions when working in a team", "<strong>Question 7:</strong><br> I frequently experience Fear Of Missing Out (FOMO)", "<strong>Question 8:</strong><br> I am interested in local politics", "<strong>Question 9:</strong><br> I listen to music frequently", "<strong>Question 10:</strong><br> I laugh and tell jokes to diffuse tense situations"];
+        // Invoke function to displayQuestions, which appends each question from questionsArray to the div element with an id of survey-questions
+        displayQuestions();
+        // Define function to display each question at each index of questionsArray
+        function displayQuestions() {
+            // Iterate through the array of questions
+            for (var i = 0; i < questionsArray.length; i++) {
+                // Assign a variable to dynamically generate a p tag
+                var newP = $("<p>");
+                // Append the content at each index of the questionsArray plus a spacer to the newP tag
+                newP.append(questionsArray[i] + "<br>");
+                // Append list item tag for 'Strongly Disagree' (top) side of radio buttons to 
+                newP.append("<li>" + "Strongly Disagree" + "</li>");
+                // Assign a variable to dynamically generate an ul tag
+                var orList = $("<ol>");
+                // Create a loop from 1 to 5 to dynamically generate radio buttons with unique values for each question number
+                for (var choiceNum = 1; choiceNum < 6; choiceNum++) {
+                    // Reassign choiceNum to a string so we can insert it into the 'value' of each radio button
+                    choiceNum = choiceNum.toString();
+                    // Append a list item and a radio button with the specific question number and unique values to the orList tag
+                    orList.append("<li>" + "<input type='radio' name='question-" + i + "' value=" + choiceNum + ">" + "</li>");
+                }
+                // Append the complete orList tag to the newP tag
+                newP.append(orList);
+                // Append list item tag for 'Strongly Agree' (bottom) side of radio buttons to 
+                newP.append("<li>" + "Strongly Agree" + "</li>");
+                // Append a horizontal rule to the newP tag to delineate questions
+                newP.append("<hr>");
+                // Append newP to the DOM in the div element with an id of survey-questions
+                $("#survey-questions").append(newP);
+            }
+        }
         // Function to hide addNewFriend modal
         function addNewFriendDone() {
             $('#addNewFriend').modal('hide');
